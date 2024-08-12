@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>STYLiSH</title>
+    <link rel="stylesheet" href="style/index.css">
+</head>
+<body>
+<div class="navbar-container"></div>
+<div class="navbar">
+    <div class="web-name"><a href="index.html">STYLiSH</a></div>
+    <div class="nav-links">
+        <a href="index.html?category=women">女裝</a>
+        <a href="index.html?category=men">男裝</a>
+        <a href="index.html?category=accessories">配件</a>
+    </div>
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Search products...">
+        <button onclick="searchProducts()">搜尋</button>
+    </div>
+    <div class="auth-container">
+        <a href="profile.html">
+            <button id="login-btn">登入/註冊</button>
+        </a>
+    </div>
+</div>
+<div class="campaign-container" id="campaign-container"></div>
+<div class="results" id="results"></div>
+<script src="script/index.js"></script>
+</body>
+</html>

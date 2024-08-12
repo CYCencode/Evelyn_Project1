@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <title>User Profile - STYLiSH</title>
+    <link rel="stylesheet" href="style/profile.css">
+
+</head>
+<body>
+<div class="navbar-container">
+    <div class="navbar">
+        <div class="web-name"><a href="index.html">STYLiSH</a></div>
+        <div class="nav-links">
+            <a href="index.html?category=women">女裝</a>
+            <a href="index.html?category=men">男裝</a>
+            <a href="index.html?category=accessories">配件</a>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div id="profile-section" style="display:none;">
+        <h2>歡迎, <span id="user-name"></span></h2>
+        <img id="user-picture" src="" alt="User Picture">
+        <p>電子郵件: <span id="user-email"></span></p>
+    </div>
+    <div id="auth-section">
+        <form id="signin-form" style="display:none;">
+            <h2>登入</h2>
+            <input type="email" id="signin-email" placeholder="Email" required>
+            <input type="password" id="signin-password" placeholder="Password" required>
+            <input type="hidden" id="redirect-url" value="">
+            <button type="submit">登入</button>
+        </form>
+        <form id="signup-form" style="display:none;">
+            <h2>註冊</h2>
+            <input type="text" id="signup-name" placeholder="Name" required>
+            <input type="email" id="signup-email" placeholder="Email" required>
+            <input type="password" id="signup-password" placeholder="Password" required>
+            <input type="hidden" id="redirect-url" value="">
+            <button type="submit">註冊</button>
+        </form>
+    </div>
+</div>
+<script src="script/profile.js"></script>
+</body>
+</html>

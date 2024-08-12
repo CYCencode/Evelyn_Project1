@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登入</title>
+    <!--  Facebook JavaScript SDK -->
+    <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+    <script>
+        let facebookAppId = '484844040817190'; // replace as my fb app ID
+
+        // init Facebook SDK
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : facebookAppId,
+                cookie     : true,
+                xfbml      : true,
+                version    : 'v11.0'
+            });
+
+            FB.AppEvents.logPageView();
+        };
+
+        // Facebook login
+        function loginWithFacebook() {
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    console.log('Welcome');
+                    FB.api('/me', {fields: 'name,email,picture'}, function(response) {
+                        console.log('Hi,, ' + response.name + '.');
+                        console.log('Your access token is: ' + FB.getAuthResponse().accessToken);
+
+                        // send access token to backend
+                        fetch('/api/1.0/user/signin', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({
+                                provider: 'facebook',
+                                access_token: FB.getAuthResponse().accessToken
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                console.log('成功:', data);
+                            })
+                            .catch((error) => {
+                                console.error('錯誤:', error);
+                            });
+                    });
+                } else {
+                    console.log('用戶取消登入或未完全授權.');
+                }
+            }, {scope: 'public_profile,email'});
+        }
+    </script>
+</head>
+<body>
+<h2>登入</h2>
+<div>
+    <button onclick="loginWithFacebook()">使用 Facebook 登入</button>
+</div>
+</body>
+</html>

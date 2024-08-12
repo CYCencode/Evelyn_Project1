@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Check Out</title>
+    <!-- Load TapPay SDK -->
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
+    <script>
+        // Initialize TapPay SDK
+        const APP_ID = '12348';
+        const APP_KEY = 'app_pa1pQcKoY22IlnSXq5m5WP5jFKzoRG58VEXpT7wU62ud7mMbDOGzCYIlzzLF';
+        TPDirect.setupSDK(APP_ID, APP_KEY, 'sandbox');
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Setup card form UI
+            const fields = {
+                number: {
+                    element: '#card-number',
+                    placeholder: '**** **** **** ****'
+                },
+                expirationDate: {
+                    element: '#card-expiration-date',
+                    placeholder: 'MM / YY'
+                },
+                ccv: {
+                    element: '#card-ccv',
+                    placeholder: 'ccv'
+                }
+            };
+
+            const styles = {
+                'input': {
+                    'color': 'gray'
+                },
+                ':focus': {
+                    'color': 'black'
+                },
+                '.valid': {
+                    'color': 'green'
+                },
+                '.invalid': {
+                    'color': 'red'
+                }
+            };
+
+            TPDirect.card.setup({
+                fields: fields,
+                styles: styles
+            });
+        });
+
+        function onSubmit() {
+            TPDirect.card.getPrime(function (result) {
+                if (result.status !== 0) {
+                    alert('取得 Prime 失敗：' + result.msg);
+                    return;
+                }
+
+                // get prime
+                const prime = result.card.prime;
+                console.log("Prime : " + prime)
+                // get jwt token from input
+                const jwtToken = document.getElementById("jwt-token").value;
+                // construct the order data
+                const orderData = {
+                    prime: prime,
+                    order: {
+                        shipping: "delivery",
+                        payment: "credit_card",
+                        subtotal: 2200,
+                        freight: 100,
+                        total: 2300,
+                        recipient: {
+                            name: "eve0",
+                            phone: "+123456789",
+                            email: "Cyc.evelynchang@gmail.com",
+                            address: "市政府站",
+                            time: "morning"
+                        },
+                        list: [
+                            {
+                                id: "1",
+                                name: "粉色碎花洋裝",
+                                price: 2200,
+                                color: {
+                                    code: "#f2abd1",
+                                    name: "粉"
+                                },
+                                size: "S",
+                                qty: 1
+                            }
+                        ]
+                    }
+                };
+
+                // fetch prime & POST to checkout API
+                fetch('/api/1.0/order/checkout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + jwtToken
+                    },
+                    body: JSON.stringify(orderData)
+                })
+                    .then(response => {
+                        if(!response.ok){
+                            alert("prime已取得，但驗證有問題");
+                        }
+                        console.log("post response : ",response.text()) ;
+                    })
+            });
+        }
+    </script>
+    <style>
+        .tpfield {
+            height: 40px;
+            width: 300px;
+            border: 1px solid gray;
+            margin: 5px 0;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+<div>
+    <label for="jwt-token">JWT Token</label>
+    <input type="text" id="jwt-token" placeholder="Enter JWT token">
+</div>
+<div>
+    <label for="card-number">Credit Card Number</label>
+    <div class="tpfield" id="card-number"></div>
+</div>
+<div>
+    <label for="card-expiration-date">Valid Thru</label>
+    <div class="tpfield" id="card-expiration-date"></div>
+</div>
+<div>
+    <label for="card-ccv">CCV</label>
+    <div class="tpfield" id="card-ccv"></div>
+</div>
+<button onclick="onSubmit()">Submit Payment</button>
+</body>
+</html>

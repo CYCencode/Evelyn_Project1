@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Campaign Management</title>
+</head>
+<body>
+<h1>Campaign Management</h1>
+<form method="post" action="/admin/campaign" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
+    <label for="product_id">Product ID:</label>
+    <input type="number" id="product_id" name="productId" required><br>
+
+    <label for="search_keyword">Search Products:</label>
+    <input type="text" id="search_keyword" oninput="searchProducts(this.value)"><br>
+    <div id="searchResults"></div><br>
+
+    <label for="story">Story:</label>
+    <textarea id="story" name="story"></textarea><br>
+
+    <label for="image">Choose an image to upload:</label>
+    <input type="file" id="image" name="image" onchange="handleFileSelect(event)" required><br><br>
+
+    <ul id="fileList"></ul>
+
+    <button type="submit">Submit</button>
+</form>
+<script>
+    let selectedFile = null;
+
+    function handleFileSelect(event) {
+        const files = event.target.files;
+        if (files.length > 0) {
+            selectedFile = files[0];
+            displaySelectedFile();
+        }
+    }
+
+    function displaySelectedFile() {
+        const output = document.getElementById('fileList');
+        output.innerHTML = '';
+        if (selectedFile) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `File: ${selectedFile.name}`;
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Remove';
+            removeButton.type = 'button';
+            removeButton.onclick = function () {
+                selectedFile = null;
+                displaySelectedFile();
+            };
+            listItem.appendChild(removeButton);
+            output.appendChild(listItem);
+        }
+    }
+
+    function handleSubmit(event) {
+        event.preventDefault();
+
+        const formData = new FormData(event.target);
+        if (selectedFile) {
+            formData.append('image', selectedFile);
+        }
+
+        fetch(event.target.action, {
+            method: 'POST',
+            body: formData
+        }).then(response => response.text())
+            .then(result => alert(result))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function searchProducts(keyword) {
+        fetch(`/api/1.0/products/search?keyword=${keyword}`)
+            .then(response => response.json())
+            .then(data => displaySearchResults(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function displaySearchResults(data) {
+        const resultsContainer = document.getElementById('searchResults');
+        resultsContainer.innerHTML = '';
+
+        const products = data.data;
+        if (products.length === 0) {
+            resultsContainer.textContent = 'No products found';
+            return;
+        }
+
+        products.forEach(product => {
+            const productItem = document.createElement('div');
+            productItem.textContent = `ID: ${product.id}, Title: ${product.title}`;
+            productItem.onclick = () => {
+                document.getElementById('product_id').value = product.id;
+            };
+            resultsContainer.appendChild(productItem);
+        });
+    }
+</script>
+</body>
+</html>

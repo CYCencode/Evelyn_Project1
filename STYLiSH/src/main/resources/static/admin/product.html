@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Management</title>
+    <script>
+        let selectedFiles = [];
+
+        function handleFileSelect(event) {
+            const files = event.target.files;
+            for (let i = 0; i < files.length; i++) {
+                selectedFiles.push(files[i]);
+            }
+            displaySelectedFiles();
+        }
+
+        function removeFile(index) {
+            selectedFiles.splice(index, 1);
+            displaySelectedFiles();
+        }
+
+        function displaySelectedFiles() {
+            const output = document.getElementById('fileList');
+            output.innerHTML = '';
+            selectedFiles.forEach((file, index) => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `File ${index + 1}: ${file.name}`;
+                const removeButton = document.createElement('button');
+                removeButton.textContent = 'Remove';
+                removeButton.type = 'button';
+                removeButton.onclick = function () {
+                    removeFile(index);
+                };
+                listItem.appendChild(removeButton);
+                output.appendChild(listItem);
+            });
+        }
+
+        function handleSubmit(event) {
+            event.preventDefault();
+
+            const formData = new FormData(event.target);
+            selectedFiles.forEach((file, index) => {
+                formData.append('files', file);
+            });
+
+            fetch(event.target.action, {
+                method: 'POST',
+                body: formData
+            }).then(response => response.text())
+                .then(result => alert(result))
+                .catch(error => console.error('Error:', error));
+        }
+
+        function handleOtherSelection(selectElement, inputId) {
+            const otherInput = document.getElementById(inputId);
+            if (selectElement.value === 'other') {
+                otherInput.style.display = 'inline';
+                otherInput.required = true;
+            } else {
+                otherInput.style.display = 'none';
+                otherInput.required = false;
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Product Management</h1>
+<form method="post" action="/admin/product" enctype="multipart/form-data" onsubmit="handleSubmit(event)">
+    <label for="category">Category:</label>
+    <select id="category" name="category" required>
+        <option value="men">Men</option>
+        <option value="women">Women</option>
+        <option value="accessories">Accessories</option>
+    </select><br>
+
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" required><br>
+
+    <label for="description">Description:</label>
+    <textarea id="description" name="description"></textarea><br>
+
+    <label for="price">Price:</label>
+    <input type="number" id="price" name="price" step="1" required><br>
+
+    <label for="texture">Texture:</label>
+    <select id="texture" name="texture" required onchange="handleOtherSelection(this, 'texture_other')">
+        <option value="棉、聚脂纖維">棉、聚脂纖維</option>
+        <option value="棉 100%">棉 100%</option>
+        <option value="羊毛">羊毛</option>
+        <option value="棉麻">棉麻</option>
+        <option value="other">其他</option>
+    </select>
+    <input type="text" id="texture_other" name="texture_other" placeholder="請填寫其他材質" style="display: none;"><br>
+
+    <label for="wash">Wash:</label>
+    <select id="wash" name="wash" required onchange="handleOtherSelection(this, 'wash_other')">
+        <option value="手洗">手洗</option>
+        <option value="水洗">水洗</option>
+        <option value="乾洗">乾洗</option>
+        <option value="other">其他</option>
+    </select>
+    <input type="text" id="wash_other" name="wash_other" placeholder="請填寫其他洗滌方式" style="display: none;"><br>
+
+    <label for="place">Place of Production:</label>
+    <select id="place" name="place" required onchange="handleOtherSelection(this, 'place_other')">
+        <option value="韓國">韓國</option>
+        <option value="日本">日本</option>
+        <option value="中國">中國</option>
+        <option value="越南">越南</option>
+        <option value="other">其他</option>
+    </select>
+    <input type="text" id="place_other" name="place_other" placeholder="請填寫其他產地" style="display: none;"><br>
+
+    <label for="note">Note:</label>
+    <textarea id="note" name="note"></textarea><br>
+
+    <label for="story">Story:</label>
+    <textarea id="story" name="story"></textarea><br>
+
+    <label for="files">Choose files to upload:</label>
+    <input type="file" id="files" name="files" multiple onchange="handleFileSelect(event)"><br><br>
+
+    <ul id="fileList"></ul>
+
+    <label for="colorCode">Choose Color:</label>
+    <input type="color" id="colorCode" name="colorCode"><br>
+
+    <label for="colorName">Color Name:</label>
+    <input type="text" id="colorName" name="colorName" required><br>
+
+    <label for="size">Possible Size Choices:</label>
+    <select id="size" name="size" multiple required>
+        <option value="S">Small</option>
+        <option value="M">Medium</option>
+        <option value="L">Large</option>
+        <option value="F-size">F-size</option>
+    </select><br>
+
+    <label for="variant_stock">Stock for Selected Variant:</label>
+    <input type="number" id="variant_stock" name="variant_stock" step="1" required><br>
+
+    <button type="submit">Submit</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Product Detail - STYLiSH</title>
+    <link rel="stylesheet" href="style/product.css">
+    <script src="https://js.tappaysdk.com/sdk/tpdirect/v5.14.0"></script>
+    <link rel="stylesheet" href="style/product.css">
+</head>
+<body>
+<div class="navbar-container">
+    <div class="navbar">
+        <div class="web-name"><a href="index.html">STYLiSH</a></div>
+        <div class="nav-links">
+            <a href="index.html?category=women">女裝</a>
+            <a href="index.html?category=men">男裝</a>
+            <a href="index.html?category=accessories">配件</a>
+        </div>
+        <div class="auth-container">
+            <a href="profile.html">
+                <button id="login-btn">登入/註冊</button>
+            </a>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="image-container">
+        <img id="mainImage" src="" alt="Main Image">
+    </div>
+    <div class="details-container">
+        <div class="product-title" id="title"></div>
+        <div class="product-id" id="productId"></div>
+        <div class="product-price" id="productPrice"></div>
+        <div class="color-options">
+            <p>顏色</p>
+            <div id="colorContainer"></div>
+        </div>
+        <div class="size-options">
+            <p>尺寸</p>
+            <div id="sizeContainer"></div>
+        </div>
+        <div class="quantity-container">
+            <p>數量</p>
+            <input type="number" id="quantity" value="1" min="1" disabled>
+        </div>
+        <button class="checkout-button" id="checkout-button" onclick="showCheckout()">結帳</button>
+        <div class="product-info">
+            <p id="note"></p>
+            <p id="texture"></p>
+            <p id="wash"></p>
+            <p id="place"></p>
+        </div>
+    </div>
+</div>
+
+<div class="story">
+    <h2>更多產品資訊</h2>
+    <p id="story"></p>
+</div>
+
+<div class="additional-images" id="additionalImages"></div>
+
+<div class="checkout" id="checkoutSection">
+    <h3>訂購商品</h3>
+    <div id="orderPreview"></div>
+
+    <h3>訂購資料</h3>
+    <div>
+        <label for="recipientName">收件人姓名</label>
+        <input type="text" id="recipientName" placeholder="請輸入收件人姓名">
+    </div>
+    <div>
+        <label for="phone">手機</label>
+        <input type="text" id="phone" placeholder="請輸入手機號碼">
+    </div>
+    <div>
+        <label for="address">地址</label>
+        <input type="text" id="address" placeholder="請輸入地址">
+    </div>
+    <div>
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="請輸入電子郵件">
+    </div>
+    <div>
+        <label>配送時間</label>
+        <div>
+            <input type="radio" id="time1" name="deliveryTime" value="morning">
+            <label for="time1">08:00-12:00</label>
+        </div>
+        <div>
+            <input type="radio" id="time2" name="deliveryTime" value="afternoon">
+            <label for="time2">14:00-18:00</label>
+        </div>
+        <div>
+            <input type="radio" id="time3" name="deliveryTime" value="anytime">
+            <label for="time3">不指定</label>
+        </div>
+    </div>
+
+    <h3>付款資料</h3>
+    <div>
+        <label for="card-number">信用卡號碼</label>
+        <div class="tpfield" id="card-number"></div>
+    </div>
+    <div>
+        <label for="card-expiration-date">有效期限</label>
+        <div class="tpfield" id="card-expiration-date"></div>
+    </div>
+    <div>
+        <label for="card-ccv">安全碼</label>
+        <div class="tpfield" id="card-ccv"></div>
+    </div>
+
+    <button onclick="onSubmit()" id="order-button">提交訂單</button>
+</div>
+<div class="results" id="results"></div>
+<script src="script/product.js"></script>
+</body>
+</html>
